@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.AccessMapper">
+    <select id="getPage" resultType="com.ssm.pojo.Access">
+        SELECT a.*,b.name
+        FROM  access_control_device AS a
+        INNER JOIN  buiding AS b
+        ON a.hospital_id=b.id
+        <where>
+            <if test="hospital_id!=-1">
+                hospital_id=#{hospital_id}
+            </if>
+        </where>
+        ORDER BY add_time DESC
+        limit #{pageIndex},#{pageSize}
+
+    </select>
+    <select id="getCount" resultType="int">
+        SELECT count(*)
+        FROM  access_control_device AS a
+        INNER JOIN  buiding AS b
+        ON a.hospital_id=b.id
+        <where>
+            <if test="hospital_id!=-1">
+                hospital_id=#{hospital_id}
+            </if>
+        </where>
+        ORDER BY add_time DESC
+    </select>
+    <insert id="add" parameterType="com.ssm.pojo.Access">
+        INSERT INTO access_control_device(principal,supplier,brand,hospital_id,`status`,add_time)
+        VALUES(#{principal},#{supplier},#{brand},#{hospital_id},0,#{add_time})
+    </insert>
+    <update id="update" parameterType="int">
+        UPDATE access_control_device SET status=0 WHERE id=#{id}
+    </update>
+</mapper>
